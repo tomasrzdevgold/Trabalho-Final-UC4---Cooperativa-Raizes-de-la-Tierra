@@ -13,12 +13,12 @@ Register food sucessfully`);
     addProducer(item) {
         this.producers.push(item);
         console.log(`
-Register food sucessfully`);
+Register producer sucessfully`);
     }
     addInstitution(item) {
         this.institutions.push(item);
         console.log(`
-Register food sucessfully`);
+Register institution sucessfully`);
     }
     list(type) {
         if (type === 1) {

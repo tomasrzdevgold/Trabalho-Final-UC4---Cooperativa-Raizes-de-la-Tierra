@@ -1,5 +1,5 @@
-import { Producer } from "../classes/Producer";
+import { Institution } from "../classes/Institution";
 
 export interface Donatable {
-    donate(quantity: number,institutionToDonate: Producer): void
+    donate(quantity: number,institutionToDonate: Institution): void
 }

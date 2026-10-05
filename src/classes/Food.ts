@@ -1,4 +1,5 @@
 import { Donatable } from "../interfaces/Donatable";
+import { Institution } from "./Institution";
 
 export class Food implements Donatable{
     private name : string;
@@ -71,11 +72,13 @@ Quantity successfully removed.`
 Quantity Available: ${this.getQuantityAvailableKg}Kg`
     }
 
-    public donate(quantity: number): void {
+    public donate(quantity: number,institutionToDonate: Institution): void {
         if(quantity > this.getQuantityAvailableKg()){
-            console.log()
+            console.log(`
+The quantity than you information is more thats the quantity available on the stock`)
         }else{
-
+            this.removeQuantity(quantity)
+            institutionToDonate.receivedFood([this.getName(),this.getCategory(),quantity,this.getProducerManage()])
         }
     }
 

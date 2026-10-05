@@ -5,6 +5,7 @@ class Institution {
     name;
     adress;
     numberOfPeopleServed;
+    foodDonated = [];
     constructor(name, adress, numberOfPeopleServed) {
         this.name = name;
         this.adress = adress;
@@ -28,7 +29,13 @@ class Institution {
     setNumberOfPeopleServed(newNumberOfPeopleServed) {
         this.numberOfPeopleServed = newNumberOfPeopleServed;
     }
-    receivedFood() {
+    getFoodDonated() {
+        return this.foodDonated;
+    }
+    receivedFood(array) {
+        this.foodDonated.push(array);
+        console.log(`
+Food recived, thanks!!!`);
     }
 }
 exports.Institution = Institution;

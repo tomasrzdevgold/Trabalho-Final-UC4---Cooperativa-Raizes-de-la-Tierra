@@ -42,8 +42,23 @@ const CommunityGardenProducer_1 = require("./classes/CommunityGardenProducer");
 let foodRegistry = new Registry_1.Registry;
 let institutionRegistry = new Registry_1.Registry;
 let producerRegistry = new Registry_1.Registry;
+let producerFamilyFarmerTest = new FamilyFarmer_1.FamilyFarmer("tomas", "12345", 50, 80);
+producerRegistry.addProducer(producerFamilyFarmerTest);
+let producerCommunityGardenTest = new CommunityGardenProducer_1.CommunityGardenProducer("el palmar", "12345", 100, 30);
+producerRegistry.addProducer(producerCommunityGardenTest);
+let batata = new Food_1.Food("batata", "carbohidratos", 20, "tomas");
+foodRegistry.addFood(batata);
+let cenoura = new Food_1.Food("cenoura", "legume", 40, "tomas");
+foodRegistry.addFood(cenoura);
+let cilantro = new Food_1.Food("cilantro", "legume", 120, "el palmar");
+foodRegistry.addFood(cilantro);
+let manzana = new Food_1.Food("manzana", "fruta", 200, "el palmar");
+foodRegistry.addFood(manzana);
+let institutionTest = new Institution_1.Institution("ifood", "rua cristo rei 552", 50);
+institutionRegistry.addInstitution(institutionTest);
 let on = true;
 while (on) {
+    console.clear();
     const menu = Number(ask.question(`
 ==========================================
     RAIZES DE LA TIERRA COOPERATIVE.INC
@@ -56,12 +71,12 @@ while (on) {
 [5] List food
 [6] List institutions
 [7] Make donation
+[8] Show informations about one institution
 [0] Exit
 
 Choose an option: `));
     switch (menu) {
         case 1:
-            console.clear();
             const typeProducer = Number(ask.question(`
 ====================================================
 Whats is the type of producer do you wanna register?
@@ -188,23 +203,144 @@ People Served: ${institution.getNumberOfPeopleServed()}
             catch (erro) {
                 console.log(`Could not complete the operation.`);
             }
+            console.log(textI);
             ask.question(`
 Press ENTER to continue...`);
             break;
         case 7:
-            let institutionToDonate = ask.question(`
+            console.clear();
+            ////////////////////////////////////////////////////////////////////////////////
+            if (institutionRegistry.list.length === 0) {
+                console.log("Dont exist anything institution register");
+            }
+            else {
+                let textIn = `
+====================================
+        INSTITUTIONS
+====================================`;
+                try {
+                    for (let institution of institutionRegistry.list(3)) {
+                        textIn += `
+====================================
+Name: ${institution.getName()}
+====================================`;
+                    }
+                }
+                catch (erro) {
+                    console.log(`Could not complete the operation.`);
+                }
+                console.log(textIn);
+                let institutionWannaDonate = ask.question(`
 Whats is the instituion do you wanna donate: `);
-            let foodToDonate = `
-Foods availables to donate on the institution: ${institutionToDonate}`;
-            for (let food of foodRegistry.list(2)) {
-                if (food.getProducerManage() === institutionToDonate && food.getQuantityAvailableKg() > 0) {
-                    foodToDonate += `
+                let instituionToDonate;
+                try {
+                    for (let institution of institutionRegistry.list(3)) {
+                        if (institution.getName() === institutionWannaDonate) {
+                            instituionToDonate = institution;
+                        }
+                    }
+                }
+                catch (erro) {
+                    console.log(`Could not complete the operation.`);
+                }
+                ////////////////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////////////////
+                console.clear();
+                let textP = `
+====================================
+            Producers
+====================================`;
+                try {
+                    for (let producer of producerRegistry.list(1)) {
+                        textP += `
+====================================
+Name: ${producer.getName()}
+====================================`;
+                    }
+                }
+                catch (erro) {
+                    console.log("Could not complete the operation. Command not reconized...");
+                }
+                console.log(textP);
+                let producerToDonate = ask.question(`
+Who is the producer do you wanna donate: `);
+                ////////////////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////////////////
+                console.clear();
+                let foodAvailables = `
+===================================================
+Foods availables of producer: "${producerToDonate}"
+===================================================`;
+                for (let food of foodRegistry.list(2)) {
+                    if (food.getProducerManage() === producerToDonate && food.getQuantityAvailableKg() > 0) {
+                        foodAvailables += `
 Name: ${food.getName()}
 Category: ${food.getCategory()}
-QuantityAvailable: ${food.getQuantityAvailableKg()}Kg `;
+QuantityAvailable: ${food.getQuantityAvailableKg()}Kg 
+`;
+                    }
+                }
+                console.log(foodAvailables);
+                let foodWannaDonate = ask.question(`
+What is the food do you wanna donate: `);
+                let foodToDonate;
+                for (let food of foodRegistry.list(2)) {
+                    if (food.getName() === foodWannaDonate) {
+                        foodToDonate = food;
+                    }
+                }
+                ////////////////////////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////////////////////////
+                let quantityToDonate = Number(ask.question(`
+What is the quantity do you wanna donate to the instition: "${institutionWannaDonate}"?: `));
+                foodToDonate.donate(quantityToDonate, instituionToDonate);
+                ask.question(`
+Press ENTER to continue...`);
+            }
+            break;
+        case 8:
+            console.clear();
+            if (institutionRegistry.list.length === 0) {
+                console.log("Dont exist anything institution register");
+            }
+            else {
+                let textInfo = `
+====================================
+        INSTITUTIONS
+====================================`;
+                try {
+                    for (let institution of institutionRegistry.list(3)) {
+                        textInfo += `
+====================================
+Name: ${institution.getName()}
+====================================`;
+                    }
+                }
+                catch (erro) {
+                    console.log(`Could not complete the operation.`);
+                }
+                let showInformation = ask.question(textInfo + `
+Write the option: `);
+                console.clear();
+                for (let instition of institutionRegistry.list(3)) {
+                    if (instition.getName() === showInformation) {
+                        let show = ``;
+                        for (let food of instition.getFoodDonated()) {
+                            show += `
+===============================
+Institution: ${showInformation}
+===============================
+Name food: ${food[0]}
+Category food: ${food[1]}
+Quantity: ${food[2]}Kg
+Comes from producer: ${food[3]}`;
+                        }
+                        console.log(show);
+                    }
                 }
             }
-            console.log(foodToDonate);
+            ask.question(`
+Press ENTER to continue...`);
             break;
         case 0:
             console.log("BYE!!!!!!!!!!!!!!!!");

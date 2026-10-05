@@ -11,8 +11,29 @@ let foodRegistry = new Registry<Food>
 let institutionRegistry = new Registry<Institution>
 let producerRegistry = new Registry<Producer>
 
+let producerFamilyFarmerTest : Producer = new FamilyFarmer("tomas","12345",50,80)
+producerRegistry.addProducer(producerFamilyFarmerTest)
+
+let producerCommunityGardenTest : Producer = new CommunityGardenProducer("el palmar","12345",100,30)
+producerRegistry.addProducer(producerCommunityGardenTest)
+
+let batata : Food = new Food("batata","carbohidratos",20,"tomas")
+foodRegistry.addFood(batata)
+let cenoura : Food = new Food("cenoura","legume",40,"tomas")
+foodRegistry.addFood(cenoura)
+let cilantro : Food = new Food("cilantro","legume",120,"el palmar")
+foodRegistry.addFood(cilantro)
+let manzana : Food = new Food("manzana","fruta",200,"el palmar")
+foodRegistry.addFood(manzana)
+
+let institutionTest : Institution = new Institution("ifood","rua cristo rei 552",50)
+institutionRegistry.addInstitution(institutionTest)
+
+
+
 let on : boolean = true
 while(on){
+    console.clear()
     const menu : number = Number(ask.question(`
 ==========================================
     RAIZES DE LA TIERRA COOPERATIVE.INC
@@ -25,13 +46,12 @@ while(on){
 [5] List food
 [6] List institutions
 [7] Make donation
+[8] Show informations about one institution
 [0] Exit
 
 Choose an option: `))
     switch(menu){
         case 1:
-            console.clear()
-
             const typeProducer : number = Number(ask.question(`
 ====================================================
 Whats is the type of producer do you wanna register?
@@ -182,29 +202,171 @@ People Served: ${institution.getNumberOfPeopleServed()}
                 console.log(`Could not complete the operation.`)
             }
 
+            console.log(textI)
+
             ask.question(`
 Press ENTER to continue...`)
         break;
 
         case 7:
-            let institutionToDonate : string = ask.question(`
+            console.clear()
+////////////////////////////////////////////////////////////////////////////////
+            if(institutionRegistry.list.length === 0){
+                console.log("Dont exist anything institution register")
+            } else{
+            let textIn : string = `
+====================================
+        INSTITUTIONS
+====================================`
+        try{
+                for (let institution of institutionRegistry.list(3)){
+                    textIn += `
+====================================
+Name: ${institution.getName()}
+====================================`
+                }
+            } catch(erro){
+                console.log(`Could not complete the operation.`)
+            }
+
+            console.log(textIn )
+
+            let institutionWannaDonate : string = ask.question(`
 Whats is the instituion do you wanna donate: `)
 
-            let foodToDonate : string = `
-Foods availables to donate on the institution: ${institutionToDonate}`
+            let instituionToDonate! : Institution
+
+        try{
+                for (let institution of institutionRegistry.list(3)){
+                    if(institution.getName() === institutionWannaDonate){
+                        instituionToDonate = institution
+                    }
+                }
+            } catch(erro){
+                console.log(`Could not complete the operation.`)
+            }
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+            console.clear()
+            
+            let textP : string = `
+====================================
+            Producers
+====================================`
+            try{
+                for (let producer of producerRegistry.list(1)){
+                    textP += `
+====================================
+Name: ${producer.getName()}
+====================================`
+                }
+                
+            } catch(erro){
+                console.log("Could not complete the operation. Command not reconized...");
+            }
+            
+            console.log(textP)
+
+            let producerToDonate : string = ask.question(`
+Who is the producer do you wanna donate: `)
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+            console.clear()
+
+            let foodAvailables : string = `
+===================================================
+Foods availables of producer: "${producerToDonate}"
+===================================================`
 
             for (let food of foodRegistry.list(2)){
-                if(food.getProducerManage() === institutionToDonate && food.getQuantityAvailableKg() > 0){
-                    foodToDonate += `
+                if(food.getProducerManage() === producerToDonate && food.getQuantityAvailableKg() > 0){
+                    foodAvailables += `
 Name: ${food.getName()}
 Category: ${food.getCategory()}
-QuantityAvailable: ${food.getQuantityAvailableKg()}Kg `
+QuantityAvailable: ${food.getQuantityAvailableKg()}Kg 
+`
                 }
             }
 
-            console.log(foodToDonate)
+            console.log(foodAvailables)
+
+            let foodWannaDonate : string = ask.question(`
+What is the food do you wanna donate: `)
+
+            let foodToDonate! : Food
+
+            for (let food of foodRegistry.list(2)){
+                if(food.getName() === foodWannaDonate){
+                    foodToDonate = food
+                }
+            }
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+
+            let quantityToDonate : number = Number(ask.question(`
+What is the quantity do you wanna donate to the instition: "${institutionWannaDonate}"?: `))
 
             
+            foodToDonate.donate(quantityToDonate,instituionToDonate)
+            
+
+            ask.question(`
+Press ENTER to continue...`)
+            }
+        break;
+
+        case 8:
+
+            console.clear()    
+
+            if(institutionRegistry.list.length === 0){
+                console.log("Dont exist anything institution register")
+            } else{
+            let textInfo : string = `
+====================================
+        INSTITUTIONS
+====================================`
+        try{
+                for (let institution of institutionRegistry.list(3)){
+                    textInfo += `
+====================================
+Name: ${institution.getName()}
+====================================`
+                }
+            } catch(erro){
+                console.log(`Could not complete the operation.`)
+            }
+
+            let showInformation : string = ask.question(textInfo + `
+Write the option: `)
+
+            console.clear()
+
+            for (let instition of institutionRegistry.list(3)){
+                if(instition.getName() === showInformation){
+                    let show : string = ``
+                    for(let food of instition.getFoodDonated()){
+                        show += `
+===============================
+Institution: ${showInformation}
+===============================
+Name food: ${food[0]}
+Category food: ${food[1]}
+Quantity: ${food[2]}Kg
+Comes from producer: ${food[3]}`
+                    }
+                
+                console.log(show)
+
+
+                }
+                
+            }
+
+        }
+
+                    ask.question(`
+Press ENTER to continue...`)
         break;
 
 

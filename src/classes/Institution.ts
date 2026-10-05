@@ -2,6 +2,7 @@ export class Institution{
     private name: string;
     private adress: string;
     private numberOfPeopleServed: number;
+    private foodDonated : any[] = []
 
 	public constructor(name: string, adress: string, numberOfPeopleServed: number) {
 		this.name = name;
@@ -33,7 +34,13 @@ export class Institution{
         this.numberOfPeopleServed = newNumberOfPeopleServed;
     }
 
-    public receivedFood():void{
-        
+    public getFoodDonated():any[]{
+        return this.foodDonated
+    }
+
+    public receivedFood(array : any[]):void{
+        this.foodDonated.push(array)
+        console.log(`
+Food recived, thanks!!!`)
     }
 }

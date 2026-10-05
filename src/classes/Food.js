@@ -63,11 +63,14 @@ Quantity successfully removed.`;
         return `
 Quantity Available: ${this.getQuantityAvailableKg}Kg`;
     }
-    donate(quantity) {
+    donate(quantity, institutionToDonate) {
         if (quantity > this.getQuantityAvailableKg()) {
-            console.log();
+            console.log(`
+The quantity than you information is more thats the quantity available on the stock`);
         }
         else {
+            this.removeQuantity(quantity);
+            institutionToDonate.receivedFood([this.getName(), this.getCategory(), quantity, this.getProducerManage()]);
         }
     }
 }

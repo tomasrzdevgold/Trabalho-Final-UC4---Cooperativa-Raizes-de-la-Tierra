@@ -21,7 +21,7 @@ Type of producer : Family Farmer
 ********************************
 Name: ${this.getName()}
 Quantity of aliments produced: ${this.getQuantityAliments()}
-Property Size: ${this.getPropertySize()}`);
+Property Size: ${this.getPropertySize()}Ha`);
     }
 }
 exports.FamilyFarmer = FamilyFarmer;

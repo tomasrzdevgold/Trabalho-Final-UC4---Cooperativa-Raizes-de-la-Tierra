@@ -13,13 +13,13 @@ Register food sucessfully`)
     public addProducer(item:T) :void {
         this.producers.push(item)
         console.log(`
-Register food sucessfully`)
+Register producer sucessfully`)
     }
 
     public addInstitution(item:T) :void {
         this.institutions.push(item)
         console.log(`
-Register food sucessfully`)
+Register institution sucessfully`)
     }
 
     public list(type : number):any{
